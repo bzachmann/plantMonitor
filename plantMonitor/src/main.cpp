@@ -1,9 +1,19 @@
 #include <Arduino.h>
 
+#include "wifimanager.h"
+#include "mqttmanager.h"
+
+
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(115200);
+  delay(10);
+
+  MqttManager::inst.init();  
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  WifiManager::inst.update();
+
+  MqttManager::inst.setWifiConnected(WifiManager::inst.isConnected());
+  MqttManager::inst.update();
 }
