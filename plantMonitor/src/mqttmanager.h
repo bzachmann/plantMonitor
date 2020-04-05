@@ -16,6 +16,9 @@ public:
 
     void setWifiConnected(bool connected);
 
+    void setTemperature(float temp);
+    void setHumidity(float humidity);
+
 private:
     void manageMqttConnection();
     static void staticMqttCallback(char * topic, byte * data, unsigned int length);
@@ -34,7 +37,9 @@ private:
     WiFiClient wifiClient;
     PubSubClient mqttClient;
     char const * clientID;
-    
+
+    PublishingManager temperaturePublisher;
+    PublishingManager humidityPublisher;
 };
 
 #endif /* MQTTMANAGER_H */

@@ -28,26 +28,17 @@ void loop() {
 
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature(true);
-
-  bool dhtValid = true;
-  if(isnan(humidity) || isnan(temperature))
-  {
-    dhtValid = false;
-  }
   
   printTimer.update();
   if(printTimer.isExpired())
   {
     printTimer.setDuration(1000);
-    if(!dhtValid)
-    {
-      Serial.println("dht invalid");
-    }
+  }
 
-    Serial.print("Humidity: ");
-    Serial.println(humidity);
-    Serial.print("Temperature: ");
-    Serial.println(temperature);
+  if(!isnan(humidity) && !isnan(temperature))
+  {
+    MqttManager::inst.setTemperature(temperature);
+    MqttManager::inst.setHumidity(humidity);
   }
 
   MqttManager::inst.setWifiConnected(WifiManager::inst.isConnected());

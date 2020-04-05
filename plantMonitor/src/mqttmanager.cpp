@@ -10,7 +10,9 @@ MqttManager::MqttManager():
   mqttConnected(false),
   wifiClient(),
   mqttClient(wifiClient),
-  clientID("WateringSystemPlantMonitor")
+  clientID("WateringSystemPlantMonitor"),
+  temperaturePublisher(mqttClient, String("/wateringSystem/status/temperature"), true, 60000, false),
+  humidityPublisher(mqttClient, String("/wateringSystem/status/humidity"), true, 60000, false)
 {
 
 }
@@ -25,13 +27,26 @@ void MqttManager::update()
 {
   manageMqttConnection();
 
-  mqttClient.loop();
+  temperaturePublisher.update();
+  humidityPublisher.update();
 
+  mqttClient.loop();
 }
 
 void MqttManager::setWifiConnected(bool connected)
 {
   wifiConnected = connected;
+}
+
+void MqttManager::setTemperature(float temp)
+{
+
+  temperaturePublisher.setValue(String(static_cast<uint8_t>(temp)));
+}
+
+void MqttManager::setHumidity(float humidity)
+{
+  humidityPublisher.setValue(String(static_cast<uint8_t>(humidity)));
 }
 
 void MqttManager::manageMqttConnection() 
