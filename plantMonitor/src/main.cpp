@@ -31,17 +31,17 @@ void setup() {
 void loop() {
   WifiManager::inst.update();
 
-  float humidity = dht.readHumidity();
-  float temperature = dht.readTemperature(true);
   float moisture = moistureSensor.read();
-  
+  MqttManager::inst.setSoilMoisture(moisture);
+
   printTimer.update();
   if(printTimer.isExpired())
   {
     printTimer.setDuration(500);
-    Serial.println(moisture);
   }
 
+  float humidity = dht.readHumidity();
+  float temperature = dht.readTemperature(true);
   if(!isnan(humidity) && !isnan(temperature))
   {
     MqttManager::inst.setTemperature(temperature);
