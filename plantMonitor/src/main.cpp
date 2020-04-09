@@ -4,28 +4,27 @@
 #include "mqttmanager.h"
 #include "DHT.h"
 #include "countdowntimer.h"
-#include <filter.h>
+#include "soilmoisturesensor.h"
 
 #define DHTTYPE DHT22
 #define DHTPIN  13
 
 DHT dht(DHTPIN, DHTTYPE);
+SoilMoistureSensor moistureSensor(34, 1615, 3450, 0.01f);
+
 CountdownTimer printTimer;
 
-Filter soilMoistureFilter;
 
 void setup() {
   Serial.begin(115200);
   delay(10);
 
   dht.begin();
-
-  soilMoistureFilter.setGain(0.01f);
-  soilMoistureFilter.init(analogRead(34));
+  moistureSensor.init();
 
   MqttManager::inst.init();
 
-  printTimer.setDuration(100);
+  printTimer.setDuration(500);
   printTimer.start();
 }
 
@@ -34,13 +33,13 @@ void loop() {
 
   float humidity = dht.readHumidity();
   float temperature = dht.readTemperature(true);
+  float moisture = moistureSensor.read();
   
   printTimer.update();
   if(printTimer.isExpired())
   {
-    printTimer.setDuration(100);
-    float ain = soilMoistureFilter.filter(analogRead(34));
-    Serial.println(ain);
+    printTimer.setDuration(500);
+    Serial.println(moisture);
   }
 
   if(!isnan(humidity) && !isnan(temperature))
