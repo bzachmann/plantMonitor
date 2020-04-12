@@ -10,7 +10,7 @@
 #define DHTPIN  13
 
 DHT dht(DHTPIN, DHTTYPE);
-SoilMoistureSensor moistureSensor(34, 1615, 3450, 0.01f);
+SoilMoistureSensor moistureSensor(34, 1740, 3420, 0.01f); //air: 3450, dry soil: 3420, cup water: 1615, wet soil: 1740
 
 CountdownTimer printTimer;
 
