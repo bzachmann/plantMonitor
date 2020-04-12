@@ -13,7 +13,8 @@ MqttManager::MqttManager():
   clientID("WateringSystemPlantMonitor"),
   temperaturePublisher(mqttClient, String("/wateringSystem/status/temperature"), true, 60000, false),
   humidityPublisher(mqttClient, String("/wateringSystem/status/humidity"), true, 60000, false),
-  soilMoisturePublisher(mqttClient, String("/wateringSystem/status/moisture"), true, 60000, false)
+  soilMoisturePublisher(mqttClient, String("/wateringSystem/status/moisture"), true, 60000, false),
+  soilTemperaturePublisher(mqttClient, String("/wateringSystem/status/soilTemperature"), true, 60000, false)
 {
 
 }
@@ -31,6 +32,7 @@ void MqttManager::update()
   temperaturePublisher.update();
   humidityPublisher.update();
   soilMoisturePublisher.update();
+  soilTemperaturePublisher.update();
 
   mqttClient.loop();
 }
@@ -54,6 +56,11 @@ void MqttManager::setHumidity(float humidity)
 void MqttManager::setSoilMoisture(float moisture)
 {
   soilMoisturePublisher.setValue(String(moisture, 1));
+}
+
+void MqttManager::setSoilTemperature(float temp)
+{
+  soilTemperaturePublisher.setValue(String(static_cast<uint8_t>(temp)));
 }
 
 void MqttManager::manageMqttConnection() 

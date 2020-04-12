@@ -19,6 +19,7 @@ public:
     void setTemperature(float temp);
     void setHumidity(float humidity);
     void setSoilMoisture(float moisture);
+    void setSoilTemperature(float temp);
 
 private:
     void manageMqttConnection();
@@ -42,6 +43,7 @@ private:
     PublishingManager temperaturePublisher;
     PublishingManager humidityPublisher;
     PublishingManager soilMoisturePublisher;
+    PublishingManager soilTemperaturePublisher;
 };
 
 #endif /* MQTTMANAGER_H */
